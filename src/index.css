@@ -63,7 +63,6 @@ h1 span {
   }
 }
 h1 span:nth-child(1) {
-  color: #186aa0;
   opacity: 0;
   animation-delay: 2s;
 }
@@ -76,7 +75,6 @@ h1 span:nth-child(3) {
   animation-delay: 2.75s;
 }
 h1 span:nth-child(4) {
-  color: #186aa0;
   opacity: 0;
   animation-delay: 3s;
 }
@@ -97,7 +95,6 @@ h1 span:nth-child(8) {
   animation-delay: 3.75s;
 }
 h1 span:nth-child(9) {
-  color: #186aa0;
   opacity: 0;
   animation-delay: 4s;
 }
