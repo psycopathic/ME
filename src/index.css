@@ -168,3 +168,17 @@ h1 span:nth-child(11) {
     transform: translateY(0);
   }
 }
+
+.cursor-segment {
+  position: fixed;
+  height: 4px;
+  border-radius: 999px;
+  pointer-events: none;
+  transform-origin: 0 50%;
+  animation: fadeOut 1s linear forwards;
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; transform: scaleX(1); }
+  to { opacity: 0; transform: scaleX(1.5); }
+}
