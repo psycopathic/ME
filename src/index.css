@@ -174,7 +174,6 @@ h1 span:nth-child(11) {
   height: 4px;
   border-radius: 999px;
   pointer-events: none;
-  transform-origin: 0 50%;
   animation: fadeOut 1s linear forwards;
 }
 
