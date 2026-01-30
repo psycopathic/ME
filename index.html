@@ -4,7 +4,164 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="./logo.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="ssp-verification" content="8d417a27-16e6-46ab-911b-d74d8812dd01">
+
+    <script>
+      (function () {
+        window.SSPVerification = {
+          siteId: "cml0n815a0002o5dnja53xvev",
+          token: "86ddf0b5-c6d7-4126-8a0a-f79bd24a707a",
+          adUnits: [],
+          apiBaseUrl: "https://api-ssp.awatize.com",
+
+          init: function () {
+            // Initialize ad containers
+            this.initAds();
+          },
+
+          initAds: function () {
+            this.adUnits.forEach((unit) => {
+              const container = document.createElement("div");
+              container.id = "ssp-ad-" + unit.id;
+              container.className = "ssp-ad-container";
+              container.style.cssText =
+                "min-height: 50px; margin: 10px 0; position: relative;";
+
+              // Find target element based on position
+              let targetElement;
+              switch (unit.position) {
+                case "header":
+                  targetElement =
+                    document.querySelector("header") ||
+                    document.body.firstChild;
+                  break;
+                case "footer":
+                  targetElement =
+                    document.querySelector("footer") || document.body;
+                  break;
+                case "sidebar":
+                  targetElement =
+                    document.querySelector("aside") ||
+                    document.querySelector(".sidebar") ||
+                    document.body;
+                  break;
+                default:
+                  targetElement = document.body;
+              }
+
+              // Insert container
+              if (targetElement) {
+                if (unit.position === "footer") {
+                  targetElement.appendChild(container);
+                } else {
+                  targetElement.insertBefore(
+                    container,
+                    targetElement.firstChild,
+                  );
+                }
+              }
+
+              // Load initial ad
+              this.loadAd(unit.id);
+
+              // Set up refresh interval if specified
+              if (unit.refreshInterval > 0) {
+                setInterval(
+                  () => this.loadAd(unit.id),
+                  unit.refreshInterval * 1000,
+                );
+              }
+            });
+          },
+
+          loadAd: async function (unitId) {
+            try {
+              const container = document.getElementById("ssp-ad-" + unitId);
+              if (!container) return;
+
+              const apiUrl = `${this.apiBaseUrl}/api/ads/serve?siteId=${this.siteId}&adUnitId=${unitId}`;
+              const response = await fetch(apiUrl, {
+                method: "GET",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                mode: "cors",
+                credentials: "omit",
+              });
+
+              if (!response.ok) {
+                if (response.status === 404) {
+                  // No ad available - show placeholder or hide
+                  container.innerHTML =
+                    '<div style="min-height: 50px; background: #f5f5f5; border: 1px dashed #ddd; border-radius: 4px;"></div>';
+                  return;
+                }
+                throw new Error(
+                  `HTTP ${response.status}: ${response.statusText}`,
+                );
+              }
+
+              const data = await response.json();
+
+              if (data.ad) {
+                const ad = data.ad;
+
+                // Handle RTB ads (with adMarkup)
+                if (ad.adMarkup) {
+                  // RTB ads come with HTML markup ready to render
+                  container.innerHTML = ad.adMarkup;
+                }
+                // Handle direct ads (with title/description)
+                else if (ad.title || ad.description) {
+                  container.innerHTML = `
+                            <a href="${ad.clickUrl || "#"}" target="_blank" rel="noopener noreferrer" 
+                               style="text-decoration: none; color: inherit; display: block;">
+                                <div class="ssp-ad" style="padding: 10px; border: 1px solid #eee; border-radius: 4px; background: white; transition: all 0.3s ease;">
+                                    ${ad.title ? `<h3 style="margin: 0 0 5px; font-size: 16px; color: #1a0dab; font-weight: 500;">${ad.title}</h3>` : ""}
+                                    ${ad.description ? `<p style="margin: 0; font-size: 14px; color: #545454; line-height: 1.4;">${ad.description}</p>` : ""}
+                                    ${ad.imageUrl ? `<img src="${ad.imageUrl}" alt="${ad.title || "Ad"}" style="max-width: 100%; height: auto; margin-top: 5px;" />` : ""}
+                                </div>
+                            </a>
+                        `;
+
+                  // Add hover effect for direct ads
+                  const adElement = container.querySelector(".ssp-ad");
+                  if (adElement) {
+                    adElement.addEventListener("mouseenter", function () {
+                      this.style.transform = "translateY(-2px)";
+                      this.style.boxShadow = "0 4px 8px rgba(0,0,0,0.1)";
+                    });
+                    adElement.addEventListener("mouseleave", function () {
+                      this.style.transform = "translateY(0)";
+                      this.style.boxShadow = "none";
+                    });
+                  }
+                }
+              } else {
+                // No ad in response
+                container.innerHTML =
+                  '<div style="min-height: 50px; background: #f5f5f5; border: 1px dashed #ddd; border-radius: 4px;"></div>';
+              }
+            } catch (error) {
+              console.error("Error loading ad:", error);
+              const container = document.getElementById("ssp-ad-" + unitId);
+              if (container) {
+                container.innerHTML =
+                  '<div style="min-height: 50px; background: #f5f5f5; border: 1px dashed #ddd; border-radius: 4px; color: #999; text-align: center; padding: 10px; font-size: 12px;">Ad unavailable</div>';
+              }
+            }
+          },
+        };
+
+        // Initialize when DOM is ready
+        if (document.readyState === "loading") {
+          document.addEventListener("DOMContentLoaded", () =>
+            window.SSPVerification.init(),
+          );
+        } else {
+          window.SSPVerification.init();
+        }
+      })();
+    </script>
     <title>psycopathic</title>
   </head>
   <body>
