@@ -1,10 +1,18 @@
-import smokeVideo from "./assets/smoke.mp4";
+
+import LetterGlitch from "./components/LetterGlitch";
 
 function App() {
   return (
     <>
-      <section>
-        <video src={smokeVideo} autoPlay muted></video>
+      <div style={{ width: '100%', height: '100vh', position: 'fixed', top: 0, left: 0, zIndex: 0, overflow: 'hidden' }}>
+        <LetterGlitch
+          glitchSpeed={50}
+          centerVignette={true}
+          outerVignette={false}
+          smooth={true}
+        />
+      </div>
+      <section style={{ position: 'relative', zIndex: 1 }}>
         <h1>
           <span>P</span>
           <span>S</span>
