@@ -27,7 +27,7 @@ function App() {
           <span>C</span>
         </h1>
         <div className="cta">
-          <button onClick={() => window.location.href = 'https://myself2-y7n9.onrender.com'}>
+          <button onClick={() => window.location.href = 'https://porfolio-he0s.onrender.com/'}>
             <span>Click here to know me!!</span>
           </button>
         </div>
